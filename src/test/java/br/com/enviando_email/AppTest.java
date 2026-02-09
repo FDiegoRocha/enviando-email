@@ -28,7 +28,7 @@ public class AppTest {
 															stringBuilderTextoEmail.toString());
 		
 		
-		enviarEmail.enviarEmail(true);
+		enviarEmail.enviarEmailAnexo(true);
 	}
 
 }
