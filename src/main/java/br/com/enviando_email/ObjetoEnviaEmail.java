@@ -3,6 +3,8 @@ package br.com.enviando_email;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -124,7 +126,7 @@ public class ObjetoEnviaEmail {
 		message.setRecipients(Message.RecipientType.TO, toUser); // para onde será enviado
 		message.setSubject(assuntoEmail); // assunto do email
 		
-		
+			
 		MimeBodyPart corpoEmail = new MimeBodyPart();
 		
 		if (envioHTML) {
@@ -133,13 +135,24 @@ public class ObjetoEnviaEmail {
 			corpoEmail.setText(textoEmail); // corpo do email
 		}
 		
-		MimeBodyPart anexoEmail = new MimeBodyPart();
-		anexoEmail.setDataHandler(new DataHandler(new ByteArrayDataSource(simuladorDePDF(), "application/pdf")));
-		anexoEmail.setFileName("anexoemail.pdf");
-		
+		List<FileInputStream> fileInputStream = new ArrayList<FileInputStream>();
+		fileInputStream.add(simuladorDePDF());
+		fileInputStream.add(simuladorDePDF());
+		fileInputStream.add(simuladorDePDF());
+		fileInputStream.add(simuladorDePDF());
+
 		Multipart multipart = new MimeMultipart();
 		multipart.addBodyPart(corpoEmail);
-		multipart.addBodyPart(anexoEmail);
+		int pos = 1;
+		for(FileInputStream fis : fileInputStream) {
+			MimeBodyPart anexoEmail = new MimeBodyPart();
+			
+			anexoEmail.setDataHandler(new DataHandler(new ByteArrayDataSource(fis, "application/pdf")));
+			anexoEmail.setFileName("anexoemail"+pos+".pdf");
+			
+			multipart.addBodyPart(anexoEmail);
+			pos++;
+		}
 		
 		message.setContent(multipart);
 
